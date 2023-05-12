@@ -1,0 +1,26 @@
+from qiskit import QuantumCircuit
+from math import pi
+
+# Crear un circuito cuántico con un registro cuántico de 2 qubits
+qc = QuantumCircuit(2)
+
+# Aplicar la compuerta de rotación
+qc.u1(-pi/4, 0)
+qc.cx(0, 1)
+qc.u1(pi/4, 1)
+qc.cx(0, 1)
+qc.u1(-pi/4, 1)
+---------------
+# Medición del estado cuántico
+qc.measure_all()
+
+# Ejecución del circuito en el simulador
+from qiskit import Aer, execute
+
+backend = Aer.get_backend('qasm_simulator')
+job = execute(qc, backend=backend, shots=1)
+result = job.result()
+measurement = list(result.get_counts().keys())[0]
+
+# Imprimir la longitud convertida en pies
+print(int(measurement, 2) / 1024 * 3.28084)
